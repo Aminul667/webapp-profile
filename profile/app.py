@@ -79,14 +79,12 @@ def line_plot(xval, yval, separate, group, hover, col, row):
 uploaded = st.file_uploader("Choose a File", type=["csv"])
 if uploaded != None:
     df = pd.read_csv(uploaded)
-    with st.spinner("Writing to DF..."):
-        time.sleep(2)
-        st.write(df)
-
+    st.write(df)
     columns = df.columns.to_list()
     columns.append(None)
 
     length = len(columns)
+    df.info()
 
 
 # st.set_page_config(
@@ -164,6 +162,7 @@ def main():
         }
         if xval != None and yval != None and separate != None:
             line_plot(**kwargs)
+
     elif page == "Plots":
         st.title("Use Pygwalker In Streamlit")
 
@@ -171,6 +170,7 @@ def main():
         components.html(pyg_html, height=700, scrolling=True)
     elif page == "Compare":
         pass
+
 
 if __name__ == "__main__":
     main()

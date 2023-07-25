@@ -58,6 +58,12 @@ def line_plot(xval, yval, separate, group, hover, col, row):
         )
         st.plotly_chart(fig)
 
+def create_statistics(var, var_value, stat_by, args):
+    data_filter = df[df[var] == var_value]
+    print(args)
+    stat = pd.DataFrame(data_filter.agg(**args)).reset_index().rename(columns={'index': 'stat', stat_by: var_value})
+    return stat
+
 
 # pre process data
 # df = load_data()
@@ -174,6 +180,7 @@ def main():
             label='Statistics Label'
         )
 
+        # create input parameters for aggregation
         if stat_label != '':
             label_list = stat_label.replace(' ', '').split(',')
             stat = list(zip(label_list, stat_func))
@@ -184,8 +191,24 @@ def main():
 
         args = {}
         for i, j in stat:
-            args[f"{i}"] = (f"({stat_by}, {j})")
-        print(args)
+            args[f"{i}"] = (stat_by, j)
+
+        # unique values in variable
+        values = df[variable].unique().tolist()
+        
+        prev_data = pd.DataFrame()
+        for value in values:
+            stat_data = create_statistics(
+                var='study',
+                var_value=value,
+                stat_by='age',
+                args=args
+            )
+            if prev_data.empty:
+                prev_data = pd.concat([prev_data, stat_data])
+            else:
+                prev_data = pd.merge(prev_data, stat_data, on='stat')
+        st.write(prev_data)
 
 
 if __name__ == "__main__":

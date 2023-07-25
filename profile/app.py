@@ -13,21 +13,6 @@ def load_data():
     return df
 
 
-# pre process data
-# df = load_data()
-# uploaded = st.file_uploader("Choose a File", type=["csv"])
-# if uploaded != None:
-#     df = pd.read_csv(uploaded)
-#     with st.spinner("Writing to DF..."):
-#         time.sleep(2)
-#         st.write(df)
-
-# columns = df.columns.to_list()
-# columns.append(None)
-
-# length = len(columns)
-
-
 def create_radio_button(separate):
     values = df[separate].unique().tolist()
 
@@ -84,8 +69,6 @@ if uploaded != None:
     columns.append(None)
 
     length = len(columns)
-    df.info()
-
 
 # st.set_page_config(
 #     page_title="Application",
@@ -168,8 +151,41 @@ def main():
 
         pyg_html = pyg.walk(df, return_html=True, dark="dark")
         components.html(pyg_html, height=700, scrolling=True)
+
     elif page == "Compare":
-        pass
+        variable = st.selectbox(
+            label='Variable',
+            options=columns,
+            index=length-1
+        )
+
+        stat_by = st.selectbox(
+            label='Statistics By',
+            options=columns,
+            index=length-1
+        )
+
+        stat_func = st.multiselect(
+            label='Statistics',
+            options=['count', 'mean', 'std', 'min', 'max', None]
+        )
+
+        stat_label = st.text_input(
+            label='Statistics Label'
+        )
+
+        if stat_label != '':
+            label_list = stat_label.replace(' ', '').split(',')
+            stat = list(zip(label_list, stat_func))
+            print(stat)
+        else:
+            stat = list(zip(stat_func, stat_func))
+            print(stat)
+
+        args = {}
+        for i, j in stat:
+            args[f"{i}"] = (f"({stat_by}, {j})")
+        print(args)
 
 
 if __name__ == "__main__":

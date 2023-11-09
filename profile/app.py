@@ -12,6 +12,7 @@ def load_data():
     # df = px.data.gapminder()
     return df
 
+
 def create_radio_button(separate):
     values = df[separate].unique().tolist()
 
@@ -21,6 +22,7 @@ def create_radio_button(separate):
         options=values
     )
     return figure_radio
+
 
 def line_plot(xval, yval, separate, group, hover, col, row):
     # a list of unique values from the group variable
@@ -56,15 +58,14 @@ def line_plot(xval, yval, separate, group, hover, col, row):
         )
         st.plotly_chart(fig)
 
+
 def create_statistics(var, var_value, stat_by, args):
     data_filter = df[df[var] == var_value]
     print(args)
-    stat = pd.DataFrame(data_filter.agg(**args)).reset_index().rename(columns={'index': 'stat', stat_by: var_value})
+    stat = pd.DataFrame(data_filter.agg(
+        **args)).reset_index().rename(columns={'index': 'stat', stat_by: var_value})
     return stat
 
-
-# pre process data
-# df = load_data()
 uploaded = st.file_uploader("Choose a File", type=["csv"])
 if uploaded != None:
     df = pd.read_csv(uploaded)
@@ -73,12 +74,6 @@ if uploaded != None:
     columns.append(None)
 
     length = len(columns)
-
-# st.set_page_config(
-#     page_title="Application",
-#     layout="wide"
-# )
-
 
 def main():
     page = st.sidebar.selectbox(
@@ -95,6 +90,9 @@ def main():
         st.header("NONMEM Patient Profile Data Application (pk/pd)")
         # st.balloons()
         # st.write(df)
+
+    elif uploaded == None:
+        st.write("Please upload a dataset")
 
     elif page == "Profile":
         xval = st.selectbox(
@@ -193,7 +191,7 @@ def main():
 
         # unique values in variable
         values = df[variable].unique().tolist()
-        
+
         prev_data = pd.DataFrame()
         for value in values:
             stat_data = create_statistics(

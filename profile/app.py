@@ -12,7 +12,6 @@ def load_data():
     # df = px.data.gapminder()
     return df
 
-
 def create_radio_button(separate):
     values = df[separate].unique().tolist()
 
@@ -22,7 +21,6 @@ def create_radio_button(separate):
         options=values
     )
     return figure_radio
-
 
 def line_plot(xval, yval, separate, group, hover, col, row):
     # a list of unique values from the group variable
@@ -94,7 +92,7 @@ def main():
     )
 
     if page == "Home":
-        st.header("Data Application")
+        st.header("NONMEM Patient Profile Data Application (pk/pd)")
         # st.balloons()
         # st.write(df)
 
@@ -153,7 +151,7 @@ def main():
             line_plot(**kwargs)
 
     elif page == "Plots":
-        st.title("Use Pygwalker In Streamlit")
+        st.title("Plotting Interface")
 
         pyg_html = pyg.walk(df, return_html=True, dark="dark")
         components.html(pyg_html, height=700, scrolling=True)

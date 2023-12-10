@@ -183,28 +183,29 @@ def main():
             print(stat)
         else:
             stat = list(zip(stat_func, stat_func))
-            print(stat)
+            print("stat",stat)
 
         args = {}
-        for i, j in stat:
-            args[f"{i}"] = (stat_by, j)
+        if stat != [(None, None)]:
+            for i, j in stat:
+                args[f"{i}"] = (stat_by, j)
 
-        # unique values in variable
-        values = df[variable].unique().tolist()
+            # unique values in variable
+            values = df[variable].unique().tolist()
 
-        prev_data = pd.DataFrame()
-        for value in values:
-            stat_data = create_statistics(
-                var='study',
-                var_value=value,
-                stat_by='age',
-                args=args
-            )
-            if prev_data.empty:
-                prev_data = pd.concat([prev_data, stat_data])
-            else:
-                prev_data = pd.merge(prev_data, stat_data, on='stat')
-        st.write(prev_data)
+            prev_data = pd.DataFrame()
+            for value in values:
+                stat_data = create_statistics(
+                    var='study',
+                    var_value=value,
+                    stat_by='age',
+                    args=args
+                )
+                if prev_data.empty:
+                    prev_data = pd.concat([prev_data, stat_data])
+                else:
+                    prev_data = pd.merge(prev_data, stat_data, on='stat')
+            st.write(prev_data)
 
 
 if __name__ == "__main__":
